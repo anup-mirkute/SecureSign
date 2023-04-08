@@ -1,0 +1,36 @@
+
+:root {
+	--white: #ffffff;
+	--error : #cc0033;
+}
+body{
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	height: 90vh;
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+}
+.form-control:focus, .form-check-input:focus{
+	box-shadow: 0 0 0 var(--white);
+}
+.card{
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
+.card-body{
+	padding: 30px;
+}
+.form-label{
+	font-weight: 600;
+}
+#loginbtn, #signupbtn {
+	padding-left: 50px;
+	padding-right: 50px;
+}
+.error{
+	color: var(--error);
+	font-size: 13px;
+}

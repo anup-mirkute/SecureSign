@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Authentication{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/auth.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="container d-flex justify-content-center">
+	<div class="card" style="width: 30rem;">
+		<div class="card-body">
+			<div>
+				<h3 class="mb-4">Create account</h3>
+			</div>
+
+			<form method="post" autocomplete="off" onsubmit="return signupFormValidation()">
+			{% csrf_token %}
+				<div class="mb-3">
+					<label for="username" class="form-label">{{ form.username.label }} :</label>
+					<!-- <input type="text" class="form-control" id="username" name="username" placeholder="Enter username"> -->
+					{{ form.username }}
+				</div>
+				<div class="mb-3">
+					<label for="email" class="form-label">{{ form.email.label }} :</label>
+					<!-- <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address"> -->
+					{{ form.email }}
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label for="password" class="form-label">{{ form.password.label }} :</label>
+						<!-- <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"> -->
+						{{ form.password }}
+					</div>
+					<div class="col-6">
+						<label for="password" class="form-label">Confirm Password :</label>
+						<input type="password" class="form-control" id="repassword" name="repassword" placeholder="Confirm password">
+					</div>
+				</div>
+				<div class="d-grid gap-2 d-md-flex justify-content-md-between mb-3">
+				 	<div class="form-check me-md-2">
+				      	<input class="form-check-input" type="checkbox" id="showpassword">
+				      	<label class="form-check-label" for="gridCheck">Show password</label>
+				    </div>
+				  	<button class="btn btn-primary" type="submit" id="signupbtn">Signup</button>
+				</div>
+			</form>
+
+			<div class="d-grid">
+				<span class="text-center mb-3">-- or --</span>
+				<a href="{% url 'login' %}" class="btn btn-outline-primary">Already have an account?</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/validation.js' %}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+  		$('#showpassword').on('click', function(){
+			var pass = $("#password");
+			var repass = $("#repassword");
+
+			if(pass.attr('type')==='password' && repass.attr('type')==='password'){
+				pass.attr('type','text');
+				repass.attr('type','text');
+			}
+			else{
+				pass.attr('type','password');
+				repass.attr('type','password');
+			}
+		})
+	})
+</script>
+{% endblock js %}
