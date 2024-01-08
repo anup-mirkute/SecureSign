@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ request.session.website_name }} | Send Email Verification{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/toast-messages.css' %}">
+
+{% endblock head %}
+
+{% block body %}
+<h3 class="brand">{{ request.session.website_name }}</h3>
+<br>
+{% include 'toast-message.html' %}
+
+<div class="container d-flex justify-content-center">
+    <div class="card text-center" style="width: 35rem;">
+        <div class="card-body">
+            <h2 class="mb-4">Verify your Email</h2>
+            <hr>
+            <p class="card-subtitle text-muted">
+                A verification email has been sent to your email address. 
+                Please check your email and follow the instructions to verify your account.
+                In case you don't receive the mail please check the spam folder.
+            </p>
+            <form class="mt-5" method="post" action="{% url 'send-verification-mail' user %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-lg btn-primary" id="resend-email-btn">Resend Verification Email</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+{% endblock js %}

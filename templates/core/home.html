@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ request.session.website_name }} | Home {% endblock title %}
+
+{% block head %}
+{% endblock head %}
+
+{% block body %}
+	{{ request.user }}
+	<a href="{% url 'logout' %}" class="btn btn-primary nav_link">Logout</a>
+
+{% endblock body %}
+
+{% block js %}
+
+{% endblock js %}

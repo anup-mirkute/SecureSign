@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ request.session.website_name }}{% endblock title %}
+
+{% block head %}
+{% endblock head %}
+
+{% block body %}
+<a href="{% url 'login' %}" type="button" class="btn btn-primary btn-lg">Login</a>
+<a href="{% url 'signup' %}" type="button" class="btn btn-primary btn-lg">Signup</a>
+{% endblock body %}
+
+{% block js %}{% endblock js %}
+
+

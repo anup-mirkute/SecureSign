@@ -1,0 +1,59 @@
+{% for message in messages %}
+	<div class="toast-box" data-aos="fade-left" data-closable>
+		<div class="toast-box-icon">
+		</div>
+		<div class="toast-box-text">
+			<p class="toast-heading"></p>
+			<p class="toast-description">{{ message }}</p>
+		</div>
+	</div>
+	
+	<script >
+		var MessageManager = { 
+			show: function(content) { debugger
+				$('.toast-box').html(content);
+				setTimeout(function(){
+					$('.toast-box').css("visibility", "hidden");
+				}, 6000);
+			} 
+		};
+		MessageManager.show();
+
+		if ( "{{ message.tags }}" == 'success' ){
+			$('.toast-box-icon').append('<span class="material-symbols-outlined">done</span>');
+			$('.toast-heading').append('Success');
+			$('.toast-box').css("border-left", "5px solid #14A44D");
+			$('.toast-heading').css("color", "#14A44D");
+			$('.material-symbols-outlined').css("color", "#14A44D");
+		}
+		else if ( "{{ message.tags }}" == 'danger' ){
+			$('.toast-box-icon').append('<span class="material-symbols-outlined">error</span>');
+			$('.toast-heading').append('Failed');
+			$('.toast-box').css("border-left", "5px solid #DC4C64");
+			$('.toast-heading').css("color", "#DC4C64");
+			$('.material-symbols-outlined').css("color", "#DC4C64");
+		}
+		else if ( "{{ message.tags }}" == 'info' ){
+			$('.toast-box-icon').append('<span class="material-symbols-outlined">info</span>');
+			$('.toast-heading').append('Information');
+			$('.toast-box').css("border-left", "5px solid #3B71CA");
+			$('.toast-heading').css("color", "#3B71CA");
+			$('.material-symbols-outlined').css("color", "#3B71CA");
+		}
+		else if ( "{{ message.tags }}" == 'warning' ){
+			$('.toast-box-icon').append('<span class="material-symbols-outlined">warning</span>');
+			$('.toast-heading').append('Warning');
+			$('.toast-box').css("border-left", "5px solid #E4A11B");
+			$('.toast-heading').css("color", "#E4A11B");
+			$('.material-symbols-outlined').css("color", "#E4A11B");
+		}
+		else if ( "{{ message.tags }}" == 'debug' ){
+			$('.toast-box-icon').append('<span class="material-symbols-outlined">info</span>');
+			$('.toast-heading').append('Debug');
+			$('.toast-box').css("border-left", "5px solid #3B71CA");
+			$('.toast-heading').css("color", "#3B71CA");
+			$('.material-symbols-outlined').css("color", "#3B71CA");
+		}
+		else{}
+	</script>
+{% endfor %}
