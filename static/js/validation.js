@@ -1,117 +1,84 @@
-function usernameChecker(username, flag=true){
-	if (username.length < 1){
-		flag = false;
-		$('#username').after('<div class="error">This field is required</div>');
-	}
-	else if (username.length > 25){
-		flag = false;
-		$('#username').after('<div class="error">Length should be less than 25</div>');
-	}
-	else {
-		var regEx = /^[a-zA-Z0-9._]+$/;
-		var valid = regEx.test(username);
-		if (!valid){
-			flag = false;
-			$('#username').after('<div class="error">Username can contain only . and _</div>');
-		}
-	}
+function usernameChecker(username){
+	if (username.length < 1) {
+        $('#username').after('<div class="error">This field is required</div>');
+        return false;
+    }
+	if (username.length > 25) {
+        $('#username').after('<div class="error">Length should be less than 25</div>');
+        return false;
+    }
 
-	if(!flag){
-		$('#username').css("border-color", "red");
-	}
-	else{
-		$('#username').css("border-color", "black");
-	}
-	return flag;
+	var regEx = /^[a-zA-Z0-9._]+$/;
+    var valid = regEx.test(username);
+    if (!valid) {
+        $('#username').after('<div class="error">Username can contain only _ and .</div>');
+        return false;
+    }
+	
+    return true;
 }
 
-function passwordChecker(password, flag=true){
+function passwordChecker(password){
 	if(password.length < 8){
-		flag = false;
 		$('#password').after('<div class="error">Length should be greater than 8</div>');
+		return false;
 	}
-	else if (password.length > 15){
-		flag = false;
+	if (password.length > 15){
 		$('#password').after('<div class="error">Length should be smaller than 15</div>');
+		return false;
 	}
-	else{
-		var regEx  = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;
-		var valid = regEx.test(password);
-		if(!valid){
-			flag = false;
-			$('#password').after('<div class="error">Password should combination of symbol, letters, numbers</div>');
-		}
+
+	var regEx  = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;
+	var valid = regEx.test(password);
+	if(!valid){
+		$('#password').after('<div class="error">Password should combination of symbol, letters, numbers</div>');
+		return false;
 	}
-	if(!flag){
-		$('#password').css("border-color", "red");
-	}
-	else{
-		$('#password').css("border-color", "black");
-	}
-	return flag;
+
+	return true;
 }
 
-function passwordMatch(password, repassword, flag=true){
+function passwordMatch(password, repassword){
 	if (password.length < 1){
-		flag = false;
       	$('#repassword').after('<div class="error">This field is required</div>');
+		return false;
 	}
-	else if (password != repassword){
-		flag = false;	
+	if (password != repassword){
 		$('#repassword').after('<div class="error">Password does not match.</div>');
-	}
-	else{
-
+		return false;
 	}
 
-	if(!flag){
-		$('#repassword').css("border-color", "red");
-	}
-	else{
-		$('#repassword').css("border-color", "black");
-	}
-	return flag;
+	return true;
 }
 
-function emailChecker(email, flag=true){
+function emailChecker(email){
 	if(email.length < 1){ 
-		flag = false;
       	$('#email').after('<div class="error">This field is required</div>');
-	}
-	else {
-		var regEx = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;  
-    	var valid = regEx.test(email);
-		if(!valid){
-    		flag = false;  
-        	$('#email').after('<div class="error">Enter a valid email</div>');
-    	}
+		return false;
 	}
 
-	if(!flag){
-		$('#email').css("border-color", "red");
-	}
-	else{
-		$('#email').css("border-color", "black");
-	}
-	return flag;
+	var regEx = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;  
+    var valid = regEx.test(email);
+	if(!valid){
+        $('#email').after('<div class="error">Enter a valid email</div>');
+		return false;
+    }
+
+	return true;
 }
 // ##############################################################################################################################
 function loginFormValidation() {
 	$(".error").remove();
 	let username = $.trim($('#username').val());
 	let password = $.trim($('#password').val());
-	var flag = true;
 
 	var usernameobj = usernameChecker(username);
 	var passobj = passwordChecker(password);
 
-	if(usernameobj == true && passobj == true){
-		flag = true;
-	}
-	else{
-		flag = false;
-	}
-	return flag;
+	$('#username').css("border-color", !usernameobj ? "red" : "black");
+    $('#password').css("border-color", !passobj ? "red" : "black");
+
+	return usernameobj && passobj;
 }
 
 function signupFormValidation(){
@@ -124,29 +91,21 @@ function signupFormValidation(){
 	var emailobj = emailChecker(email);
 	var passobj = passwordChecker(password);
 
-	if(usernameobj == true && emailobj == true && passobj == true){
-		flag = true;
-	}
-	else{
-		flag = false;
-	}
-	return flag;
+	$('#username').css("border-color", !usernameobj ? "red" : "black");
+    $('#email').css("border-color", !emailobj ? "red" : "black");
+	$('#password').css("border-color", !passobj ? "red" : "black");
+
+	return usernameobj && emailobj && passobj;
 }
 
 function forgetPassword(){
 	$(".error").remove();
 	let email = $.trim($('#email').val());
-	var flag = true;
 
 	var emailobj = emailChecker(email);
+	$('#email').css("border-color", !emailobj ? "red" : "black");
 
-	if(emailobj == true){
-		flag = true
-	}
-	else{
-		flag = false;
-	}
-	return flag;
+	return emailobj;
 }
 
 function resetPasswordValidation(){
@@ -157,12 +116,8 @@ function resetPasswordValidation(){
 	var passobj = passwordChecker(password);
 	var repassobj = passwordMatch(password, repassword);
 
-	if(passobj == true && repassobj == true){
-		flag = true;
-	}
-	else{
-		flag = false;
-	}
-	return flag;
-}
+	$('#password').css("border-color", !passobj ? "red" : "black");
+	$('#repassword').css("border-color", !repassobj ? "red" : "black");
 
+	return passobj && repassobj;
+}
