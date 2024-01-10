@@ -11,6 +11,7 @@ urlpatterns = [
     path('send-verification-mail/<user>', views.sendVerificationMail, name="send-verification-mail"),
     path('password-reset/', views.sendPasswordResetMail, name="send-password-reset-mail"),
     path('reset-password/<uidb64>/<token>/', views.resetPassword, name="reset-password"),
+    path('is_username_exist', views.isUsernameExist, name="is_username_exist")
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

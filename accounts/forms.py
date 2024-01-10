@@ -29,7 +29,8 @@ class SignupForm(forms.Form):
     username = forms.CharField(label='Username', max_length=25, widget=forms.TextInput(attrs={
         'class': 'form-control form-control-lg',
         'placeholder': 'Username',
-        'id' : 'username', 
+        'id' : 'username',
+        'spellcheck' : 'false',
     }))
     email = forms.CharField(label='Email Address', max_length=320, widget=forms.EmailInput(attrs={
         'class': 'form-control form-control-lg',
@@ -46,7 +47,8 @@ class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=25, widget=forms.TextInput(attrs={
         'class': 'form-control form-control-lg',
         'placeholder': 'Username',
-        'id' : 'username', 
+        'id' : 'username',
+        'spellcheck' : 'false', 
     }))
     password = forms.CharField(label='Password', max_length=15, widget=forms.PasswordInput(attrs={
         'class' : 'form-control form-control-lg',

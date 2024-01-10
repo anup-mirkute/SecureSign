@@ -263,3 +263,14 @@ def is_Exist(request):
     #     print('5')
 
     return JsonResponse({"hello" : "hello"})
+
+def isUsernameExist(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        username = request.POST.get('username', None)
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'valid':'False', 'message':'Username already exists'})
+        else:
+            return JsonResponse({'valid':'True', 'message':'Username Found'})
+    else :
+        pass

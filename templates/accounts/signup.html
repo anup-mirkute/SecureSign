@@ -48,4 +48,47 @@
 
 {% block js %}
 <script type="text/javascript" src="{% static 'js/validation.js' %}"></script>
+
+<script type="text/javascript">
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", $('[name="csrfmiddlewaretoken"]').val());
+			}
+		}
+	});
+
+	$(document).ready(function(){
+		let delayTimer;
+	
+		$("#username").keyup(function() {
+			clearTimeout(delayTimer); 
+			delayTimer = setTimeout(function() {
+				const username = $("#username").val();
+				$.ajax({
+					type: "POST",
+					url: "{% url 'is_username_exist' %}",
+					dataType: 'json',
+					data: {
+						username: username,
+						'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+					},
+					success: function(data) {
+						if (data['valid'] === 'False'){
+							$(".error").remove();
+							$('#username').css("border-color", "red");
+							$('#username').after('<div class="error">' + data['message'] + '</div>');
+						} else {
+							$(".error").remove();
+							$('#username').css("border-color", "#c0c0c0");
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('Request failed:', status, error);
+					}
+				});
+			}, 1000);
+		});
+	});
+</script>
 {% endblock js %}
