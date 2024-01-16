@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
 
     # 3rd party apps
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -157,3 +158,18 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '' # your outlook email address
 EMAIL_HOST_PASSWORD = '' # your outlook email password
+
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # Replace with your Redis server URL
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TIMEZONE = "Asia/Kolkata"
+
+# CELERY_BEAT_SCHEDULE = {
+#     'delete_unverified_user': {
+#         'task': 'accounts.views.delete_unverified_user',  # Specify the path to your task
+#         'schedule': 10,
+#         # 'schedule': crontab(hour=14, minute=49),    # Schedule daily at 12 PM
+#     },
+# }

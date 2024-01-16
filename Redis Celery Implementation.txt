@@ -1,0 +1,59 @@
+We need to install the Redis first.
+Redis is not officially supported on Windows. 
+To install Redis on Windows, you'll first need to enable WSL2 (Windows Subsystem for Linux).
+WSL2 lets you run Linux binaries natively on Windows. 
+For this method to work, you'll need to be running Windows 10 version 2004 and higher or Windows 11.
+
+WSL : Windows Subsystem for Linux is a feature of Windows that allows developers to run a Linux environment without the need for a separate virtual machine or dual booting.
+
+Open the Powershell / CMD (Command Prompt) in administrator mode by right-clicking and selecting "Run as administrator"
+
+Enter the command : 
+        -   wsl --install
+
+Check the Redis :
+        -   redis-server
+
+If redis is not installed try to update the apt for that
+        -   sudo apt update
+
+Then installed the Redis
+        -   sudo apt install redis-server
+
+Check the Status of Redis
+        -   sudo service redis status
+
+To enable the redis server, if server is not enabled
+        -   sudo systemctl enable redis-server
+
+To Check the Redis Client 
+	    -   redis-cli
+
+###############################################################################################################################
+
+
+After configuring the WSL, follow the steps :
+
+Step 1 :
+    Install the Celery and Redis in your project
+        -   pip install celery
+        -   pip install redis
+
+    For Windows we also need to install gevent
+        -   pip install gevent
+
+Step 2 :
+    Open 2 terminal in your project :
+        Terminal 1 :
+            -   celery -A SecureSign worker -l info
+
+            In Windows :
+            -   celery -A SecureSign worker -l info -P gevent
+        
+        Terminal 2 :
+            -   celery -A SecureSign beat -l info
+
+            For Immediate Excution of the task :  
+            -   celery -A SecureSign call accounts.views.delete_unverified_user
+
+--------------------------------------------------------------------------------------------------------------------------------

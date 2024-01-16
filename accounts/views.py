@@ -47,8 +47,8 @@ def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data['username'].strip()
+            password = form.cleaned_data['password'].strip()
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
@@ -80,9 +80,9 @@ def signup(request):
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data['username'].strip()
+            email = form.cleaned_data['email'].strip()
+            password = form.cleaned_data['password'].strip()
 
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'User already exists! Try logging in.')
@@ -182,7 +182,7 @@ def sendPasswordResetMail(request):
     if request.method == 'POST':
         form = EmailInputForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            email = form.cleaned_data['email'].strip()
             try:
                 user = User.objects.get(email=email)
                 if not user.is_active:
@@ -227,8 +227,8 @@ def resetPassword(request, uidb64, token):
         if request.method == 'POST':
             form = PasswordResetForm(request.POST)
             if form.is_valid():
-                password = form.cleaned_data['password']
-                repassword = form.cleaned_data['repassword']
+                password = form.cleaned_data['password'].strip()
+                repassword = form.cleaned_data['repassword'].strip()
                 if password == repassword:
                     user.set_password(password)
                     user.save()
@@ -241,28 +241,6 @@ def resetPassword(request, uidb64, token):
         messages.error(request, 'The reset password link is invalid.')
         return HttpResponseRedirect(reverse('send-password-reset-mail'))
 
-def is_Exist(request):
-    # print('1')
-    # if request.is_ajax and request.method == 'POST':
-    #     username = request.POST.get('username', None)
-    #     email = request.POST.get('email', None)
-    #     print(username, email)
-    #     if username:
-    #         print('3')
-    #         if User.objects.filter(username=username).exists():
-    #             return JsonResponse({"valid":False, "responder":"username"}, status = 200)
-    #         else:
-    #             return JsonResponse({"valid":True, "responder":"username"}, status = 200)
-
-    #     if email:
-    #         print('4')
-    #         if User.objects.filter(email=email).exists():
-    #             return JsonResponse({"valid":False, "responder":"email"}, status = 200)
-    #         else:
-    #             return JsonResponse({"valid":True, "responder":"email"}, status = 200)
-    #     print('5')
-
-    return JsonResponse({"hello" : "hello"})
 
 def isUsernameExist(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
