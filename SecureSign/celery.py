@@ -26,6 +26,6 @@ celery_app.conf.beat_schedule = {
     'delete_unverified_user': {
         'task': 'accounts.tasks.delete_unverified_user',  # Specify the path to your task
         'schedule': 10,
-        # 'schedule': crontab(hour=14, minute=49),    # Schedule daily at 12 PM
+        # 'schedule': crontab(hour=24, minute=00),    # Schedule daily at 12 AM
     },
 }

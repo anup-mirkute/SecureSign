@@ -6,9 +6,7 @@
 {% endblock head %}
 
 {% block body %}
-	{{ request.user }}
-	<a href="{% url 'logout' %}" class="btn btn-primary nav_link">Logout</a>
-
+{% include 'core/navbar.html' %}
 {% endblock body %}
 
 {% block js %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ request.session.website_name }} | Accounts {% endblock title %}
+
+{% block head %}
+<style>
+    .active{
+        background-color: green;
+        padding : 0px 15px; 
+        color : white;
+        border-radius : 50px;
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+{% include 'core/navbar.html' %}
+
+<div class="container">
+
+    <h2>Where you're logged in</h2> <hr>
+    <div class="card" style="width:25rem;">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for device in deviced_loggedin %}
+                    <li class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ device.user_browser_family }} - {{ device.user_browser_version_string }}</h5>
+                            {% if device.device_id == device_id %}
+                                <small class="active">Active</small>
+                            {% else %}
+                                <a href="{% url 'logout_device' device_id=device.device_id %}">Terminate</a>
+                            {% endif %}
+                        </div>
+                        <p class="mb-1">{{ device.user_os_family }} {{ device.user_os_version_string }}</p>
+                        {% comment %} <small class="text-muted">And some muted small print.</small> {% endcomment %}
+                    </li>   
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock body %}
+
+{% block js %}
+
+{% endblock js %}
