@@ -1,3 +1,5 @@
+import os
+import mimetypes
 from django.shortcuts import render, redirect, reverse
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -19,26 +21,86 @@ from django.utils.encoding import force_bytes
 from django.utils.html import strip_tags
 from django.utils import timezone
 
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from django.template.loader import render_to_string
 
 from datetime import timedelta
 
-def sendingMail(page, subject, link, to_email, username):
-    template = 'mail/' + page
-    context = {
-        'subject' : subject,
-        'link'    : link,
-        'username': username,
-        'email'   : to_email
-    }
-    html_content = render_to_string(template, context)
-    text_content = strip_tags(html_content)
-    sending_mail = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [to_email])
-    sending_mail.attach_alternative(html_content, "text/html")
-    sending_mail.send()
+
+def generate_token(request, user, path_name):
+    generate_token = default_token_generator
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = generate_token.make_token(user)
+    url = request.build_absolute_uri(reverse(path_name, kwargs={'uidb64' : uid, 'token' : token}))
+    return url
+
+class EmailSender:
+    '''
+    subject         ->  str     :   Mandatory : Subject of the Mail
+    recipient_list  ->  list    :   List of mail addresses that you want to send the mail
+    user            ->  str     :   current user's username 
+    message         ->  str     :   A message is optional if you want to send the template with the mail otherwise it is mandatory field and having with HTML attribute.
+    cc_email        ->  list    :   List of mail addresses that you want to keep in cc
+    bcc_email       ->  list    :   List of mail addresses that you want to keep in bcc
+    template_name   ->  str     :   A template_name is optional if you just want to send a message with the mail otherwise it is mandatory field to send the template with the mail.
+    links           ->  list    :   Optional : A Link with the mail
+    otp             ->  str     :   Optional : A OTP with the mail
+    token           ->  str     :   Optional : A token with the mail
+
+    '''
+    def __init__(self, subject, recipient_list, user=None, message=None, cc_email=None, bcc_email=None, template_name=None, file_name=None, links=None, otp=None, token=None):
+        self.subject = subject
+        self.from_mail = settings.EMAIL_HOST_USER
+        self.recipient_list = recipient_list
+        self.user = user
+        self.message = message
+        self.cc_email = cc_email
+        self.bcc_email = bcc_email
+        self.template_name = template_name
+        self.file_name = file_name
+        self.links = links
+        self.otp = otp
+        self.token = token
+
+    def sending_mail(self):
+        if self.template_name is not None:
+            template = 'email_template/' + self.template_name
+            context = {
+                'user' : self.user,
+                'recipient_list' : self.recipient_list,
+                'links' : self.links,
+                'otp' : self.otp,
+                'token' : self.token,
+            }
+            html_content = render_to_string(template, context)
+        else:
+            html_content = self.message
+
+        text_content = strip_tags(html_content) 
+        msg = EmailMultiAlternatives(self.subject, text_content, self.from_mail, self.recipient_list)
+        msg.attach_alternative(html_content, "text/html")
+
+        if self.cc_email is not None:
+            msg.cc = self.cc_email
+
+        if self.bcc_email is not None:
+            msg.bcc = self.bcc_email
+
+        if self.file_name is not None:
+            file_path = os.path.join(settings.MEDIA_ROOT, 'email_attachment', self.file_name)
+
+            # Determine the content type and encoding for the attachment
+            content_type, encoding = mimetypes.guess_type(file_path)
+            if content_type is None or encoding is not None:
+                content_type = 'application/octet-stream'  # Default content type if it cannot be determined
+
+            with open(file_path, 'rb') as file:
+                msg.attach(self.file_name, file.read(), content_type)
+
+
+        msg.send()
 
 def login(request):
     if request.user.is_authenticated:
@@ -96,17 +158,14 @@ def signup(request):
                 user.set_password(password)
                 user.is_active = False
                 user.save()
-
-                # Generate the verification code for the user 
-                generate_token = default_token_generator
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = generate_token.make_token(user)
-                reset_url = request.build_absolute_uri(reverse('verify-mail', kwargs={'uidb64' : uid, 'token' : token}))
-
+                
                 # Sending the verification mail to user 
+                reset_url = generate_token(request, user, 'verify-mail')
                 subject = 'Email Confirmation'
                 page = 'email_verification_mail.html'
-                sendingMail(page, subject, reset_url, email, username)
+                # sendingMail(page, subject, reset_url, email, username)
+                mail = EmailSender(subject, [email], user=username, template_name=page, token=reset_url)
+                mail.sending_mail()
 
                 messages.success(request, 'Account created!! Please verify your email')
                 return redirect('send-verification-mail', user)
@@ -159,16 +218,13 @@ def sendVerificationMail(request, user):
 
     if not get_user.is_active:
         if request.method == 'POST':
-            # ReGenerate Token for the user
-            generate_token = default_token_generator
-            uid = urlsafe_base64_encode(force_bytes(get_user.pk))
-            token = generate_token.make_token(get_user)
-            reset_url = request.build_absolute_uri(reverse('verify-mail', kwargs={'uidb64' : uid, 'token' : token}))
-
             # Resend the verification mail to the user
+            reset_url = generate_token(request, get_user, 'verify-mail')
             subject = 'Email Confirmation'
             page = 'email_verification_mail.html'
-            sendingMail(page, subject, reset_url, get_user.email, get_user)
+            # sendingMail(page, subject, reset_url, get_user.email, get_user)
+            mail = EmailSender(subject, [get_user.email], user=get_user, template_name=page, token=reset_url)
+            mail.sending_mail()
 
             messages.success(request, 'Verification link has been send to your mail')
     else:
@@ -193,16 +249,14 @@ def sendPasswordResetMail(request):
                 return redirect('send-password-reset-mail')
             
             if user:
-                # Generate Token for the user
-                generate_token = default_token_generator
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = generate_token.make_token(user)
-                reset_url = request.build_absolute_uri(reverse('reset-password', kwargs={'uidb64': uid, 'token': token}))
-                
                 # Sending mail to user
+                reset_url = generate_token(request, user, 'reset-password')
                 subject = 'Passsword reset for your account'
                 page = 'forget_password_mail.html'
-                sendingMail(page, subject, reset_url, user.email, user.username)
+                # sendingMail(page, subject, reset_url, user.email, user.username)
+                mail = EmailSender(subject, [user.email], user=user, template_name=page, token=reset_url)
+                mail.sending_mail()
+
                 messages.success(request, 'Password reset link has been sent to your mail')
                 return redirect('login')
     else:
