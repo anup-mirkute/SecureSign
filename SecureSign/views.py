@@ -4,6 +4,8 @@ from django.conf import settings
 
 
 def index(request):
-    request.session['website_name'] = settings.WEBSITE_NAME
-
-    return render(request, 'index.html')
+    brand = settings.WEBSITE_NAME
+    context = {
+        'brand' : brand,
+    }
+    return render(request, 'index.html', context)

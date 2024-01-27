@@ -132,7 +132,9 @@ def login(request):
                 return redirect('login')
             
     form = LoginForm
-    context = {'form' : form,}
+    brand = settings.WEBSITE_NAME
+
+    context = {'form' : form, 'brand' : brand,}
     return render(request, 'accounts/login.html', context)
 
 def signup(request):
@@ -163,14 +165,15 @@ def signup(request):
                 reset_url = generate_token(request, user, 'verify-mail')
                 subject = 'Email Confirmation'
                 page = 'email_verification_mail.html'
-                # sendingMail(page, subject, reset_url, email, username)
                 mail = EmailSender(subject, [email], user=username, template_name=page, token=reset_url)
                 mail.sending_mail()
 
                 messages.success(request, 'Account created!! Please verify your email')
                 return redirect('send-verification-mail', user)
     form = SignupForm
-    context = {'form' : form}
+    brand = settings.WEBSITE_NAME
+    
+    context = {'form' : form, 'brand' : brand,}
     return render(request, 'accounts/signup.html', context)
 
 
@@ -178,7 +181,6 @@ def signup(request):
 def logout(request):
     request.session.clear()
     logoutUser(request)
-    request.session['website_name'] = settings.WEBSITE_NAME
     return redirect('login')
 
 @csrf_protect
@@ -222,7 +224,6 @@ def sendVerificationMail(request, user):
             reset_url = generate_token(request, get_user, 'verify-mail')
             subject = 'Email Confirmation'
             page = 'email_verification_mail.html'
-            # sendingMail(page, subject, reset_url, get_user.email, get_user)
             mail = EmailSender(subject, [get_user.email], user=get_user, template_name=page, token=reset_url)
             mail.sending_mail()
 
@@ -253,7 +254,6 @@ def sendPasswordResetMail(request):
                 reset_url = generate_token(request, user, 'reset-password')
                 subject = 'Passsword reset for your account'
                 page = 'forget_password_mail.html'
-                # sendingMail(page, subject, reset_url, user.email, user.username)
                 mail = EmailSender(subject, [user.email], user=user, template_name=page, token=reset_url)
                 mail.sending_mail()
 
@@ -261,7 +261,9 @@ def sendPasswordResetMail(request):
                 return redirect('login')
     else:
         form = EmailInputForm
-        context = {'form' : form}
+        brand = settings.WEBSITE_NAME
+    
+        context = {'form' : form, 'brand' : brand,}
     return render(request, 'accounts/send-password-reset-mail.html', context)
 
 @csrf_protect
@@ -289,7 +291,9 @@ def resetPassword(request, uidb64, token):
                     messages.success(request, 'Password reset successfully. Login now')
                     return HttpResponseRedirect(reverse('login'))
         form = PasswordResetForm
-        context = {'form' : form}
+        brand = settings.WEBSITE_NAME
+    
+        context = {'form' : form, 'brand' : brand,}
         return render(request, 'accounts/reset-password.html', context)
     else:
         messages.error(request, 'The reset password link is invalid.')

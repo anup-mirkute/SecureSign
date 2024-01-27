@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ request.session.website_name }} | Home {% endblock title %}
+{% block title %}{{ brand }} | Home {% endblock title %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}">
 {% endblock head %}
 
 {% block body %}
