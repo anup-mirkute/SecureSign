@@ -7,12 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from accounts.models import UserLoginSessionInfo
-from django.core.cache import cache
+
 
 # Create your views here.
 @login_required(login_url=settings.LOGIN_URL)
 def home(request):
-    brand = settings.WEBSITE_NAME
     # device_name = get_device_name_from_request(request)
     # session_data = request.session
     # Iterate through the session data
@@ -23,15 +22,13 @@ def home(request):
 
     # Do something with the session ID
     # print("Session ID:", session_id)
-    context = {'brand' : brand}
-    return render(request, 'core/home.html', context)
+    return render(request, 'core/home.html')
 
 
 # #################################     Account Management      #################################
 
 @login_required(login_url=settings.LOGIN_URL)
 def account(request):
-    brand = settings.WEBSITE_NAME
     deviced_loggedin = UserLoginSessionInfo.objects.filter(user=request.user)
     session_key = request.session.session_key
 
@@ -42,7 +39,6 @@ def account(request):
     context = {
         'deviced_loggedin' : deviced_loggedin,
         'device_id' : device_id,
-        'brand' : brand,
     }
     return render(request, 'core/manage_account/account.html', context)
 

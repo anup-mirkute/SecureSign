@@ -3,9 +3,9 @@ from django.http import HttpResponse
 from django.conf import settings
 
 
-def index(request):
+def website_name(request):
     brand = settings.WEBSITE_NAME
-    context = {
-        'brand' : brand,
-    }
-    return render(request, 'index.html', context)
+    return {'brand': brand}
+
+def index(request):
+    return render(request, 'index.html')

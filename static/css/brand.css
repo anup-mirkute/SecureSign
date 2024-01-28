@@ -4,4 +4,9 @@
 .brand{
     font-family: 'Bruno Ace', cursive;
     margin: 0;
+    color: #0C090A;
+    font-weight: 500;
+    padding-left: 1rem;
+    text-decoration: none;
+    line-height: 0;
 }

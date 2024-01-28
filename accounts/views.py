@@ -132,9 +132,8 @@ def login(request):
                 return redirect('login')
             
     form = LoginForm
-    brand = settings.WEBSITE_NAME
 
-    context = {'form' : form, 'brand' : brand,}
+    context = {'form' : form,}
     return render(request, 'accounts/login.html', context)
 
 def signup(request):
@@ -171,9 +170,8 @@ def signup(request):
                 messages.success(request, 'Account created!! Please verify your email')
                 return redirect('send-verification-mail', user)
     form = SignupForm
-    brand = settings.WEBSITE_NAME
     
-    context = {'form' : form, 'brand' : brand,}
+    context = {'form' : form,}
     return render(request, 'accounts/signup.html', context)
 
 
@@ -261,9 +259,8 @@ def sendPasswordResetMail(request):
                 return redirect('login')
     else:
         form = EmailInputForm
-        brand = settings.WEBSITE_NAME
     
-        context = {'form' : form, 'brand' : brand,}
+        context = {'form' : form,}
     return render(request, 'accounts/send-password-reset-mail.html', context)
 
 @csrf_protect
@@ -291,9 +288,8 @@ def resetPassword(request, uidb64, token):
                     messages.success(request, 'Password reset successfully. Login now')
                     return HttpResponseRedirect(reverse('login'))
         form = PasswordResetForm
-        brand = settings.WEBSITE_NAME
     
-        context = {'form' : form, 'brand' : brand,}
+        context = {'form' : form,}
         return render(request, 'accounts/reset-password.html', context)
     else:
         messages.error(request, 'The reset password link is invalid.')

@@ -1,24 +1,64 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand brand" href="#">{{ brand }}</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Home</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'account' %}">Account</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item nav_link" href="{% url 'logout' %}">Logout</a></li>
-                    </ul>
-                  </li>
-            </ul>
-          </div>
+{% load static %}
+<nav class="navbar navbar-expand-lg fixed-top">
+
+    <h5 class="pt-1"><a class="brand">{{ brand }}</a></h5>
+
+    <div class="navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar_tabs">
+
+        <a class="btn tabs" aria-current="page" href="{% url 'home' %}">
+          <li class="nav-item"><span class="material-symbols-outlined tabs_icon">home</span></li>
+        </a>
+        <a class="btn tabs" aria-current="page" href="{% url 'home' %}">
+          <li class="nav-item"><span class="material-symbols-outlined tabs_icon" style="padding-top : 2px;">chat</span></li>
+        </a>
+        <a class="btn tabs" aria-current="page" href="{% url 'home' %}">
+          <li class="nav-item"><span class="material-symbols-outlined tabs_icon" style="padding-top : 2px;">add_box</span></li>
+        </a>
+        <a class="btn tabs" aria-current="page" href="{% url 'home' %}">
+          <li class="nav-item"><span class="material-symbols-outlined tabs_icon" style="padding-top : 2px;">explore_nearby</span></li>
+        </a>
+
+      </ul>
     </div>
-</nav>
+
+    <form class="form_search" method="post" autocomplete="off">
+      {% csrf_token %}
+      <input class="form-control search" type="search" placeholder="Search" aria-label="Search">
+    </form>
+
+    <div class="nav_end_tabs">
+
+      <li class="dropdown">
+        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+          <img class="account_circle" src="{% static 'img/bell-6799634_1280.png' %}">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <li><a class="dropdown-item" href="{% url 'account' %}">Account</a></li>
+        </ul>
+      </li> 
+
+      <li class="dropdown">
+        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+          <img class="account_circle" src="{% static 'img/avatar-3814049_1280.png' %}">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <li>
+            <a class="dropdown-item" href="{% url 'account' %}">
+              <span class="material-symbols-outlined dropdown_icons">person</span>
+              &nbsp;&nbsp;Account
+            </a>
+          </li>
+          <div class="dropdown-divider"></div>
+          <li>
+            <a class="dropdown-item nav_link" href="{% url 'logout' %}">
+              <span class="material-symbols-outlined dropdown_icons">logout</span>
+              &nbsp;&nbsp;Logout
+            </a>
+          </li>
+        </ul>
+      </li>
+
+    </div>
+
+</nav> <br><br><br>
