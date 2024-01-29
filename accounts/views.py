@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from .forms import LoginForm, SignupForm, EmailInputForm, PasswordResetForm
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as loginUser, logout as logoutUser
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -27,7 +27,9 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.template.loader import render_to_string
 
 from datetime import timedelta
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 def generate_token(request, user, path_name):
     generate_token = default_token_generator

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'django_celery_results',
     'django_user_agents',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -139,6 +140,8 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.User'
 
 # Website Name 
 WEBSITE_NAME = 'SecureSign'

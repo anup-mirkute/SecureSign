@@ -1,10 +1,28 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
+from django.contrib.auth.models import AbstractUser
+from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
-# Create your models here.
+GENDER = {
+    'M' : 'Male',
+    'F' : 'Female',
+    'T' : 'Transgender',
+}
+class User(AbstractUser):
+    first_name = None
+    last_name = None
+    name = models.CharField(max_length=50)
+    is_email_verified = models.BooleanField(default=False)
+    phone_no = PhoneNumberField(help_text='Contact phone number', blank=True)
+    is_phone_no_verified = models.BooleanField(default=False)
+    bio = models.TextField(max_length=200, blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER, blank=True)
+    dob = models.DateField(blank=True, null=True)
+    profile_img = models.ImageField(upload_to='profile_pics/', blank=True)
+
+
 class UserLoginSessionInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     session_key = models.CharField(max_length=100)
     device_id = models.CharField(max_length=100)
     ip_address = models.GenericIPAddressField()

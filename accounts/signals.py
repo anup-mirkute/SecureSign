@@ -1,9 +1,11 @@
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from .models import UserLoginSessionInfo
 from django.dispatch import receiver
 from datetime import datetime
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 def create_device_id(user):
     now = datetime.now()

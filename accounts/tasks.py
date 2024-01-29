@@ -1,9 +1,12 @@
 from celery import shared_task
 import logging
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from datetime import timedelta
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
